@@ -1,0 +1,27 @@
+services:
+  app_vet:
+    build: clinica_veterinaria
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:mariadb://clinica_vet:3306/clinica_veterinaria?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_USER_NAME: jean
+      DB_PASSWORD: Craider.2024!!!
+    restart: always
+    depends_on:
+      clinica_vet:
+          condition: service_healthy
+  clinica_vet:
+    image: mariadb:10.11
+    ports:
+      - "3307:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: "SysAdmin.2024!!!"
+      MYSQL_USER: jean         # Usuario adicional
+      MYSQL_PASSWORD: Craider.2024!!!  # Contraseña del usuario jean
+      MYSQL_DATABASE: clinica_veterinaria  # Base de datos inicial
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
